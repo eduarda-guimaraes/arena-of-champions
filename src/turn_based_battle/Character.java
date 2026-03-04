@@ -4,51 +4,82 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Character {
-    String name;
-    int health;
-    int attack;
-    int defense;
-    List<String> inventory;
 
-    public Character (String name, int health, int attack, int defense){
+    protected String name;
+    protected int health;
+    protected int attackPower;
+    protected int defense;
+    protected boolean defending;
+    protected List<String> inventory;
+
+    public Character(String name, int health, int attackPower, int defense) {
+
         this.name = name;
         this.health = health;
-        this.attack = attack;
+        this.attackPower = attackPower;
         this.defense = defense;
+        this.defending = false;
 
-        inventory = new ArrayList<>();
+        this.inventory = new ArrayList<>();
 
         inventory.add("Potion");
         inventory.add("Potion");
         inventory.add("Potion");
     }
 
-    public void attack (Character target){
-        int damage = this.attack - target.defense;
+    public boolean isAlive() {
 
-        if (damage < 0){
-            damage = 0;
-        }
-        target.health-=damage;
-
-        System.out.println(this.name +" atacou "+ target.name +" e causou "+ damage + " de dano!");
+        return health > 0;
     }
 
-    public void usePotion(){
-        if(inventory.contains("Potion")){
-            inventory.remove("Potion");
+    public void attack(Character target) {
 
-            health+=20;
+        int damage = attackPower - target.defense;
 
-            System.out.println("Você usou uma poção e recuperou 20 de vida!");
-            System.out.println("Vida atual: " + health);
+        if (damage < 1) {
+            damage = 1;
         }
-        else{
+
+        System.out.println(name + " atacou " + target.name + " causando " + damage + " de dano!");
+
+        target.takeDamage(damage);
+    }
+
+    public void defend() {
+
+        defending = true;
+
+        System.out.println(name + " está se defendendo!");
+    }
+
+    public void takeDamage(int damage) {
+
+        if (defending) {
+            damage = damage / 2;
+        }
+
+        health -= damage;
+
+        if (health < 0) {
+            health = 0;
+        }
+
+        System.out.println(name + " recebeu " + damage + " de dano!");
+    }
+
+    public void usePotion() {
+
+        if (inventory.size() > 0) {
+
+            inventory.remove(0);
+
+            health += 20;
+
+            System.out.println(name + " usou uma poção e recuperou 20 de vida!");
+
+        } else {
+
             System.out.println("Você não tem mais poções!");
         }
-    }
-
-    public boolean isAlive(){
-        return health > 0;
     }
 }

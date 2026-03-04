@@ -1,6 +1,7 @@
 package turn_based_battle;
 
 import java.util.Scanner;
+import java.util.InputMismatchException;
 
 public class Main {
 
@@ -15,21 +16,33 @@ public class Main {
 
         Character hero = chooseClass(name);
 
-        Character enemy = new Character("Orc", 80, 15, 3);
-
-        startBattle(hero, enemy);
+        startArena(hero);
 
         scanner.close();
     }
 
     public static Character chooseClass(String name) {
 
-        System.out.println("\nEscolha sua classe:");
-        System.out.println("1 - Guerreiro");
-        System.out.println("2 - Mago");
-        System.out.println("3 - Arqueiro");
+        int choice = 0;
 
-        int choice = scanner.nextInt();
+        while (choice < 1 || choice > 3) {
+
+            System.out.println("\nEscolha sua classe:");
+            System.out.println("1 - Guerreiro");
+            System.out.println("2 - Mago");
+            System.out.println("3 - Arqueiro");
+
+            try {
+
+                choice = scanner.nextInt();
+
+            } catch (InputMismatchException e) {
+
+                System.out.println("❌ Entrada inválida! Digite um número.");
+                scanner.nextLine();
+                continue;
+            }
+        }
 
         if (choice == 1) {
             System.out.println("Você escolheu Guerreiro!");
@@ -45,13 +58,40 @@ public class Main {
         }
     }
 
+    public static void startArena(Character hero){
+
+        int totalBattles = 3;
+
+        for (int i = 1; i<= totalBattles; i++){
+
+            System.out.println("\n⚔️ Batalha " + i);
+
+            Character enemy = EnemyGenerator.generateEnemy();
+
+            System.out.println("Um inimigo apareceu: " + enemy.name + "!");
+
+            startBattle(hero, enemy);
+
+            if (!hero.isAlive()) {
+
+                System.out.println("\n💀 Você foi derrotado na arena...");
+                return;
+            }
+
+            System.out.println("\n✅ Você venceu a batalha!");
+        }
+
+        System.out.println("\n🏆 Você é o campeão da arena!");
+    }
+
     public static void startBattle(Character hero, Character enemy) {
 
         int turn = 1;
 
-        System.out.println("\nUm inimigo apareceu: " + enemy.name);
-
         while (hero.isAlive() && enemy.isAlive()) {
+
+            hero.defending = false;
+            enemy.defending = false;
 
             System.out.println("\nTurno " + turn);
 
@@ -65,49 +105,70 @@ public class Main {
 
             turn++;
         }
-
-        endGame(hero);
     }
 
     public static void showStatus(Character hero, Character enemy) {
 
-        System.out.println("Sua vida: " + hero.health + " | Vida do inimigo: " + enemy.health);
+        System.out.println(hero.name + " vida: " + hero.health +
+                " | " + enemy.name + " vida: " + enemy.health);
 
     }
 
     public static void playerTurn(Character hero, Character enemy) {
 
-        System.out.println("\nEscolha sua ação:");
-        System.out.println("1 - Atacar");
-        System.out.println("2 - Defender");
-        System.out.println("3 - Usar Poção ("+ hero.inventory.size() +" restantes)");
+        int choice = 0;
 
-        int choice = scanner.nextInt();
+        while (choice < 1 || choice > 3) {
 
-        if (choice == 1) {
-            hero.attack(enemy);
-        }
-        else if (choice == 2) {
-            System.out.println("Você se defendeu e reduziu o dano neste turno!");
-        } else if (choice == 3) {
-            hero.usePotion();;
-        } else {
-            System.out.println("Opção inválida!");
+            System.out.println("\nEscolha sua ação:");
+            System.out.println("1 - Atacar");
+            System.out.println("2 - Defender");
+            System.out.println("3 - Usar Poção ("+ hero.inventory.size() +" restantes)");
+
+            try {
+
+                choice = scanner.nextInt();
+
+            } catch (InputMismatchException e) {
+
+                System.out.println("❌ Entrada inválida! Digite um número.");
+                scanner.nextLine();
+                continue;
+            }
+
+            if (choice == 1) {
+
+                hero.attack(enemy);
+
+            } else if (choice == 2) {
+
+                hero.defend();
+
+            } else if (choice == 3) {
+
+                hero.usePotion();
+
+            } else {
+
+                System.out.println("❌ Escolha uma opção válida!");
+            }
         }
     }
 
     public static void enemyTurn(Character hero, Character enemy) {
+
         System.out.println("\nTurno do inimigo!");
-        enemy.attack(hero);
-    }
 
-    public static void endGame(Character hero) {
+        double action = Math.random();
 
-        if (hero.isAlive()) {
-            System.out.println("\n🏆 Você venceu a batalha!");
-        }
-        else {
-            System.out.println("\n💀 Você foi derrotado...");
+        if (action < 0.7) {
+
+            enemy.attack(hero);
+
+        } else {
+
+            enemy.defend();
+
         }
     }
 }
