@@ -237,15 +237,6 @@ Sua vida: 120 | Vida do inimigo: 80
 
 ---
 
-## 🇺🇸 English Version
-
-### Arena of Champions ⚔️
-**Turn-Based Battle Game**
-
-This project was developed as the final challenge of Module 4, focused on Java and Object-Oriented Programming. The goal is to create a terminal-based RPG mini-game, where the player chooses a hero and faces enemies in a turn-based combat system.
-
----
-
 ## 👩🏻‍💻 Desenvolvedora
 
 <table align="center">
