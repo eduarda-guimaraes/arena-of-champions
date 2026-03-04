@@ -217,22 +217,6 @@ turn-based-battle/
 
 ---
 
-## ▶️ Como Executar o Projeto
-
-### 1️⃣ Compilar o projeto
-Dentro da pasta do projeto, execute:
-
-```bash
-javac *.java
-```
-
-### 2️⃣ Executar o jogo
-```bash
-java Main
-```
-
----
-
 ## 💻 Exemplo de Execução
 
 ```text
